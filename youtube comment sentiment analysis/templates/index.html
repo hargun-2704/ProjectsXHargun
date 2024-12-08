@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Comments Sentiment Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="{{ url_for('static', filename='header-image.jpg') }}" alt="Sentiment Analysis Header" class="header-image">
+            <h1>YouTube Comments Sentiment Analyzer</h1>
+            <p>Analyze sentiments from YouTube comments instantly!</p>
+        </header>
+        <main>
+            <form id="analyzeForm">
+                <div class="form-group">
+                    <label for="api_key">
+                        <img src="{{ url_for('static', filename='key-icon.png') }}" alt="Key Icon" class="icon"> YouTube Data API Key:
+                    </label>
+                    <input type="text" id="api_key" name="api_key" placeholder="Enter your API Key" required>
+                </div>
+                <div class="form-group">
+                    <label for="video_id">
+                        <img src="{{ url_for('static', filename='video-icon.png') }}" alt="Video Icon" class="icon"> YouTube Video ID:
+                    </label>
+                    <input type="text" id="video_id" name="video_id" placeholder="Enter the Video ID" required>
+                </div>
+                <button type="submit">Analyze</button>
+            </form>
+            <div id="result">
+                <img id="sentimentPlot" src="" alt="Sentiment Analysis Plot">
+            </div>
+        </main>
+        <footer>
+            <p>Powered by CodeXHargun</p>
+            <img src="{{ url_for('static', filename='footer-image.jpg') }}" alt="Footer Decoration" class="footer-image" height="">
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('analyzeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            fetch('/analyze', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('sentimentPlot').src = 'data:image/png;base64,' + data.plot_url;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
